@@ -406,6 +406,7 @@ html.cursor-off .cursor-ring {
 .touch {
   position: relative;
   z-index: 3;
+  scroll-margin-top: 3.5rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem 4rem;
@@ -525,6 +526,7 @@ html.cursor-off .cursor-ring {
 .about-hold {
   position: relative;
   z-index: 3;
+  scroll-margin-top: 3.5rem;
   height: 100vh;
   height: 100dvh;
   background: #000;
@@ -636,6 +638,7 @@ html.cursor-off .cursor-ring {
 .reels {
   position: relative;
   z-index: 3;
+  scroll-margin-top: 3.5rem;
   background: #050505;
 }
 

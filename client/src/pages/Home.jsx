@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { api } from '../api.js';
 import IntroHero from '../components/IntroHero.jsx';
 import { getVideoSource } from '../video.js';
@@ -313,7 +312,7 @@ function ContactBand({ profile }) {
   }
 
   return (
-    <footer className="touch">
+    <footer className="touch" id="contact">
       <div className="touch-intro">
         <h2>Get in Touch</h2>
         <p className="touch-lead">let&apos;s collaborate on your next project</p>
@@ -410,8 +409,9 @@ export default function Home() {
           <img src="/logo.png" alt={profile.name} />
         </a>
         <nav>
-          <a href="#work">Work</a>
-          <Link to="/admin">Admin</Link>
+          <a href="#about">About</a>
+          <a href="#project">Project</a>
+          <a href="#contact">Contact Us</a>
         </nav>
       </header>
 
@@ -422,7 +422,7 @@ export default function Home() {
       />
 
       <main>
-        <section className="about-hold" aria-label="About">
+        <section className="about-hold" id="about" aria-label="About">
           <div className="about-page">
             <div className="about-photo">
               <img src="/portrait.jpg" alt="" />
@@ -445,7 +445,7 @@ export default function Home() {
           ))}
         </section>
 
-        <section className="reels" id="work">
+        <section className="reels" id="project">
           {sections.length === 0 ? (
             <p className="empty">New videos will show up here.</p>
           ) : (
