@@ -13,7 +13,6 @@
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.2",
     "express": "^4.21.2",
-    "hadi-mogharbel-website": "file:..",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2"
   },
