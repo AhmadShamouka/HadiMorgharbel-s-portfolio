@@ -29,11 +29,21 @@ const upload = multer({
   },
 });
 
+const categories = [
+  'Commercials',
+  'Brand Films',
+  'Fashion',
+  'Creative Projects',
+  'Event Coverage',
+];
+
 function present(post) {
   return {
     id: post.id,
     title: post.title,
     description: post.description,
+    category: post.category,
+    featured: post.featured,
     videoUrl: post.videoUrl,
     videoFileUrl: post.videoFile ? `/uploads/${post.videoFile}` : '',
     publishedAt: post.publishedAt,
@@ -44,6 +54,11 @@ function present(post) {
 function parseId(value) {
   const id = Number(value);
   return Number.isInteger(id) ? id : null;
+}
+
+function parseCategory(value) {
+  const category = String(value || '').trim();
+  return categories.includes(category) ? category : '';
 }
 
 function parseDate(value) {
@@ -78,24 +93,34 @@ router.post('/', requireAuth, upload.single('video'), asyncHandler(async (req, r
   const title = String(req.body.title || '').trim();
   const description = String(req.body.description || '').trim();
   const videoUrl = String(req.body.videoUrl || '').trim();
+  const category = parseCategory(req.body.category);
+  const featured = req.body.featured === 'true';
   const publishedAt = parseDate(req.body.publishedAt);
 
   if (!title) return rejectUpload(req, res, 400, 'Title is required');
   if (!description) return rejectUpload(req, res, 400, 'Description is required');
+  if (!category) return rejectUpload(req, res, 400, 'Choose a category');
   if (!publishedAt) return rejectUpload(req, res, 400, 'Date is invalid');
   if (!videoUrl && !req.file) {
     return rejectUpload(req, res, 400, 'Add a video link or upload a video file');
   }
 
   try {
-    const post = await prisma.videoPost.create({
-      data: {
-        title,
-        description,
-        videoUrl,
-        videoFile: req.file ? req.file.filename : '',
-        publishedAt,
-      },
+    const post = await prisma.$transaction(async (tx) => {
+      if (featured) {
+        await tx.videoPost.updateMany({ where: { category, featured: true }, data: { featured: false } });
+      }
+      return tx.videoPost.create({
+        data: {
+          title,
+          description,
+          videoUrl,
+          category,
+          featured,
+          videoFile: req.file ? req.file.filename : '',
+          publishedAt,
+        },
+      });
     });
     res.status(201).json(present(post));
   } catch (err) {
@@ -114,6 +139,8 @@ router.put('/:id', requireAuth, upload.single('video'), asyncHandler(async (req,
   const title = String(req.body.title || '').trim();
   const description = String(req.body.description || '').trim();
   const videoUrl = String(req.body.videoUrl || '').trim();
+  const category = parseCategory(req.body.category);
+  const featured = req.body.featured === 'true';
   const publishedAt = parseDate(req.body.publishedAt);
   const nextFile = req.file
     ? req.file.filename
@@ -123,15 +150,24 @@ router.put('/:id', requireAuth, upload.single('video'), asyncHandler(async (req,
 
   if (!title) return rejectUpload(req, res, 400, 'Title is required');
   if (!description) return rejectUpload(req, res, 400, 'Description is required');
+  if (!category) return rejectUpload(req, res, 400, 'Choose a category');
   if (!publishedAt) return rejectUpload(req, res, 400, 'Date is invalid');
   if (!videoUrl && !nextFile) {
     return rejectUpload(req, res, 400, 'Add a video link or upload a video file');
   }
 
   try {
-    const post = await prisma.videoPost.update({
-      where: { id },
-      data: { title, description, videoUrl, videoFile: nextFile, publishedAt },
+    const post = await prisma.$transaction(async (tx) => {
+      if (featured) {
+        await tx.videoPost.updateMany({
+          where: { category, featured: true, NOT: { id } },
+          data: { featured: false },
+        });
+      }
+      return tx.videoPost.update({
+        where: { id },
+        data: { title, description, videoUrl, videoFile: nextFile, category, featured, publishedAt },
+      });
     });
     if (existing.videoFile && existing.videoFile !== nextFile) {
       await removeStoredFile(existing.videoFile);

@@ -18,6 +18,7 @@ router.put('/', requireAuth, asyncHandler(async (req, res) => {
   const headline = String(req.body.headline || '').trim();
   const bio = String(req.body.bio || '').trim();
   const email = String(req.body.email || '').trim();
+  const phone = String(req.body.phone || '').trim();
   const location = String(req.body.location || '').trim();
 
   if (!name) {
@@ -26,8 +27,8 @@ router.put('/', requireAuth, asyncHandler(async (req, res) => {
 
   const profile = await prisma.profile.upsert({
     where: { id: 1 },
-    update: { name, headline, bio, email, location },
-    create: { id: 1, name, headline, bio, email, location },
+    update: { name, headline, bio, email, phone, location },
+    create: { id: 1, name, headline, bio, email, phone, location },
   });
 
   res.json(profile);

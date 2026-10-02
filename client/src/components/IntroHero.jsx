@@ -15,7 +15,6 @@ function nameParts(name) {
   const last = tokens.slice(1).join(' ');
   const line = (last ? `${first} ${last}` : first).toUpperCase();
   return {
-    first: first.toUpperCase(),
     line,
     keepFirst: 0,
     keepLast: last ? first.length + 1 : -1,
@@ -31,6 +30,7 @@ export default function IntroHero({ name, videoSrc, onReady }) {
   const lastRef = useRef(null);
   const videoRef = useRef(null);
   const readySent = useRef(false);
+  const timersRef = useRef([]);
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -41,13 +41,13 @@ export default function IntroHero({ name, videoSrc, onReady }) {
 
     const sequence = ['in', 'scatter', 'stack', 'open', 'title', 'done'];
     let elapsed = 0;
-    const timers = sequence.map((next) => {
+    timersRef.current = sequence.map((next) => {
       const previous = next === 'in' ? 'boot' : sequence[sequence.indexOf(next) - 1];
       elapsed += WAIT[previous];
       return setTimeout(() => setStage(next), elapsed);
     });
 
-    return () => timers.forEach(clearTimeout);
+    return () => timersRef.current.forEach(clearTimeout);
   }, []);
 
   useEffect(() => {
@@ -98,6 +98,7 @@ export default function IntroHero({ name, videoSrc, onReady }) {
   }, [stage, shift, parts.keepLast]);
 
   function skip() {
+    timersRef.current.forEach(clearTimeout);
     setStage('done');
   }
 
@@ -141,8 +142,6 @@ export default function IntroHero({ name, videoSrc, onReady }) {
           );
         })}
       </div>
-
-      <h1 className="intro-word">{parts.first}</h1>
 
       {stage !== 'done' ? (
         <button className="intro-skip" type="button" onClick={skip}>Skip</button>

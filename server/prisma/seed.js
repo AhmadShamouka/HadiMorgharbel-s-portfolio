@@ -35,10 +35,11 @@ if (!profile) {
     data: {
       id: 1,
       name: 'Hadi Mogharbel',
-      headline: 'Portfolio',
-      bio: 'A short introduction will go here.',
-      email: '',
-      location: '',
+      headline: 'Cinematographer / Filmmaker / Editor / Visual Artist',
+      bio: 'I am a visual storyteller who loves creating meaningful images and bringing ideas to life through film. My work includes commercials, branded content, events, and documentary-style projects, always aiming to create natural, engaging, and cinematic visuals. Explore my work and see the diverse range of projects I\'ve been involved in.',
+      email: 'hadimogharbel@gmail.com',
+      phone: '+971543650898',
+      location: 'UAE',
     },
   });
 
@@ -48,6 +49,8 @@ if (!profile) {
       description:
         'Descriptions stay above the video. Replace this example from the admin page, or delete it and add the real ones.',
       videoUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+      category: 'Commercials',
+      featured: true,
       publishedAt: new Date(),
     },
   });

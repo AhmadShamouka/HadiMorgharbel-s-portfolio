@@ -9,11 +9,21 @@ function toLocalInput(value) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
-function videoFormData({ title, description, videoUrl, publishedAt, file, removeFile }) {
+const videoCategories = [
+  'Commercials',
+  'Brand Films',
+  'Fashion',
+  'Creative Projects',
+  'Event Coverage',
+];
+
+function videoFormData({ title, description, videoUrl, category, featured, publishedAt, file, removeFile }) {
   const data = new FormData();
   data.append('title', title);
   data.append('description', description);
   data.append('videoUrl', videoUrl);
+  data.append('category', category);
+  data.append('featured', featured ? 'true' : 'false');
   data.append('publishedAt', publishedAt);
   if (file) data.append('video', file);
   if (removeFile) data.append('removeFile', 'true');
@@ -24,6 +34,8 @@ const blankVideo = () => ({
   title: '',
   description: '',
   videoUrl: '',
+  category: 'Commercials',
+  featured: false,
   publishedAt: toLocalInput(new Date()),
   file: null,
 });
@@ -91,6 +103,7 @@ export default function AdminDashboard() {
           headline: profile.headline,
           bio: profile.bio,
           email: profile.email,
+          phone: profile.phone,
           location: profile.location,
         },
       });
@@ -127,6 +140,8 @@ export default function AdminDashboard() {
       title: post.title,
       description: post.description,
       videoUrl: post.videoUrl || '',
+      category: post.category || 'Commercials',
+      featured: Boolean(post.featured),
       publishedAt: toLocalInput(post.publishedAt),
       file: null,
       removeFile: false,
@@ -219,7 +234,7 @@ export default function AdminDashboard() {
           />
         </label>
         <label className="field">
-          Headline
+          Roles
           <input
             value={profile.headline}
             onChange={(event) => setProfile({ ...profile, headline: event.target.value })}
@@ -232,6 +247,7 @@ export default function AdminDashboard() {
             onChange={(event) => setProfile({ ...profile, bio: event.target.value })}
           />
         </label>
+        <p className="hint">The name, roles, and introduction are the lines beside the photo. Save to update the site.</p>
         <div className="split">
           <label className="field">
             Email
@@ -239,6 +255,13 @@ export default function AdminDashboard() {
               type="email"
               value={profile.email}
               onChange={(event) => setProfile({ ...profile, email: event.target.value })}
+            />
+          </label>
+          <label className="field">
+            Phone
+            <input
+              value={profile.phone || ''}
+              onChange={(event) => setProfile({ ...profile, phone: event.target.value })}
             />
           </label>
           <label className="field">
@@ -272,6 +295,24 @@ export default function AdminDashboard() {
             onChange={(event) => setDraft({ ...draft, description: event.target.value })}
             required
           />
+        </label>
+        <label className="field">
+          Category
+          <select
+            value={draft.category}
+            onChange={(event) => setDraft({ ...draft, category: event.target.value })}
+            required
+          >
+            {videoCategories.map((name) => <option key={name}>{name}</option>)}
+          </select>
+        </label>
+        <label className="check">
+          <input
+            type="checkbox"
+            checked={draft.featured}
+            onChange={(event) => setDraft({ ...draft, featured: event.target.checked })}
+          />
+          Main video for this category
         </label>
         <label className="field">
           Video link
@@ -329,6 +370,24 @@ export default function AdminDashboard() {
                     />
                   </label>
                   <label className="field">
+                    Category
+                    <select
+                      value={edit.category}
+                      onChange={(event) => setEdit({ ...edit, category: event.target.value })}
+                      required
+                    >
+                      {videoCategories.map((name) => <option key={name}>{name}</option>)}
+                    </select>
+                  </label>
+                  <label className="check">
+                    <input
+                      type="checkbox"
+                      checked={edit.featured}
+                      onChange={(event) => setEdit({ ...edit, featured: event.target.checked })}
+                    />
+                    Main video for this category
+                  </label>
+                  <label className="field">
                     Video link
                     <input
                       value={edit.videoUrl}
@@ -381,6 +440,7 @@ export default function AdminDashboard() {
               ) : (
                 <>
                   <p className="post-date">{toLocalInput(post.publishedAt).replace('T', ' ')}</p>
+                  <p className="eyebrow">{post.category}{post.featured ? ' · Main' : ''}</p>
                   <h3 className="post-title">{post.title}</h3>
                   <p className="description">{post.description}</p>
                   <div className="actions">
