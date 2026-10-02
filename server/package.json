@@ -14,9 +14,7 @@
     "dotenv": "^17.2.2",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "multer": "^2.0.2"
-  },
-  "devDependencies": {
+    "multer": "^2.0.2",
     "prisma": "^6.16.2"
   }
 }
