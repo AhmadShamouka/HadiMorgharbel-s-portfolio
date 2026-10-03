@@ -291,19 +291,8 @@ h1 {
 
 @media (max-width: 640px) {
   .split { grid-template-columns: 1fr; }
-  .admin-header, .site-header { align-items: flex-start; }
+  .admin-header { align-items: flex-start; }
   .hero { padding-top: 2rem; }
-  .about-hold { height: auto; }
-  .services { grid-template-columns: 1fr; padding: 2.4rem 1.3rem; }
-  .reel-slide { height: 70vh; }
-  .about-page {
-    position: relative;
-    grid-template-columns: 1fr;
-    height: auto;
-    min-height: 100dvh;
-  }
-  .about-photo { height: 58vh; }
-  .about-copy { padding: 2.2rem 1.3rem 2.8rem; }
 }
 
 .site-home {
@@ -972,5 +961,102 @@ html.cursor-off .cursor-ring {
 @media (prefers-reduced-motion: reduce) {
   .letter, .intro-media, .intro-video {
     transition: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .site-home .site-header {
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.7rem;
+    background: rgba(5, 5, 5, 0.94);
+  }
+
+  .site-home .brand img {
+    height: 28px;
+  }
+
+  .site-home nav {
+    flex-wrap: nowrap;
+    gap: 0.55rem;
+  }
+
+  .site-home nav a {
+    font-size: 0.68rem;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+
+  .letter {
+    font-size: clamp(1.7rem, 9vw, 3rem);
+  }
+
+  .about-hold,
+  .about-page {
+    height: auto;
+    min-height: 0;
+  }
+
+  .about-page {
+    grid-template-columns: 1fr;
+  }
+
+  .about-photo {
+    height: 62vh;
+  }
+
+  .about-copy {
+    padding: 1.6rem 1.15rem 2.2rem;
+  }
+
+  .about-copy h2 {
+    font-size: 2rem;
+  }
+
+  .about-roles {
+    max-width: none;
+    margin-top: 0.7rem;
+    font-size: 1.05rem;
+  }
+
+  .about-bio {
+    margin-top: 1rem;
+    font-size: 1rem;
+  }
+
+  .services {
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+    scroll-margin-top: 3.2rem;
+    padding: 3.4rem 1.25rem 2rem;
+  }
+
+  .reel-slide {
+    height: 72vh;
+  }
+
+  .reel-shade {
+    padding: 4.5rem 1.1rem 1.4rem;
+  }
+
+  .reel-shade h3 {
+    font-size: clamp(1.7rem, 8.5vw, 2.4rem);
+    letter-spacing: 0.02em;
+  }
+
+  .watch-copy h3 {
+    font-size: 1.45rem;
+  }
+
+  .touch {
+    padding: 2.6rem 1.15rem 2.2rem;
+  }
+
+  .touch h2 {
+    font-size: 2rem;
+  }
+
+  .touch-lead {
+    font-size: 1.15rem;
   }
 }
